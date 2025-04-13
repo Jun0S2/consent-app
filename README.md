@@ -1,7 +1,7 @@
 # 🩺 Consent App – Medical Consent Form Generator
 
 <p align="center">
-  <img src="https://github.com/Jun0S2/consent-app/blob/main/public/banner.png" alt="Consent App Banner" width="100%" />
+  <img src="https://github.com/Jun0S2/consent-app/blob/main/public/readme.png" alt="Consent App Banner" width="100%" />
 </p>
 
 > A privacy-focused, multi-form consent manager for medical clinics.  
