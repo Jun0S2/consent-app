@@ -1,11 +1,18 @@
 "use client";
 
+// support android app file save 
+import { Capacitor } from "@capacitor/core";
+import { Filesystem, Directory } from "@capacitor/filesystem";
+import JSZip from "jszip";
+import { Buffer } from "buffer"; // Capacitor 앱에선 문제 없음
+
+
 import { title, subtitle } from "@/components/primitives";
 import React, { useState, useEffect } from "react";
 import { services } from "./services"; // Import services
 import { states } from "./states"; // Import states array
 import DynamicForm from "./DynamicForm";
-import JSZip from "jszip";
+
 import FileSaver from "file-saver";
 import EmailAutocomplete from "./EmailAutoComplete";
 import SearchableDropdown from "./SearchableDropdown";
@@ -84,68 +91,99 @@ const Index: React.FC = () => {
     console.log("✅ Updated savedForms:", savedForms);
     setIsModalOpen(false);
   };
+
   const handleSubmitAll = async () => {
     setIsSubmitButtonLoading(true);
-
+  
     if (savedForms.length === 0) {
       alert("🚨 다운로드할 폼이 없습니다. 먼저 폼을 작성해주세요.");
       setIsSubmitButtonLoading(false);
       return;
     }
-
+  
     try {
       const zip = new JSZip();
       savedForms.forEach(({ key, blob }) => {
         zip.file(`${key}_form.pdf`, blob);
       });
-
-      console.log("✅ ZIP 파일을 생성 중...");
-
+  
+      console.log("✅ ZIP 파일 생성 중...");
       const zipBlob = await zip.generateAsync({ type: "blob" });
+  
+      const platform = Capacitor.getPlatform();
+      console.log(`📱 Platform: ${platform}`);
+  
+      if (platform === "web") {
+        // ✅ 웹에서는 <a download> 방식
+        const url = URL.createObjectURL(zipBlob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "completed_forms.zip";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+  
+        alert("✅ ZIP 파일이 웹에서 다운로드되었습니다!");
+      } else {
+        // ✅ 앱 (Android/iOS)
+        const arrayBuffer = await zipBlob.arrayBuffer();
+        const base64 = Buffer.from(arrayBuffer).toString("base64");
+  
+        // 저장 시도 순서: Documents → External → Data
+        const tryDirs = [Directory.Documents, Directory.External, Directory.Data];
+        let saved = false;
+        let lastError = null;
+  
+        for (const dir of tryDirs) {
+          try {
+            const now = new Date();
+            const yyyy = now.getFullYear();
+            const MM = String(now.getMonth() + 1).padStart(2, "0");
+            const dd = String(now.getDate()).padStart(2, "0");
+            const hh = String(now.getHours()).padStart(2, "0");
+            const mm = String(now.getMinutes()).padStart(2, "0");
 
-      console.log("✅ ZIP 파일 생성 완료!");
+            const safeName = `${userData.firstName}_${userData.lastName}`.replace(/\s+/g, "_");
+            const fileName = `consent_${yyyy}-${MM}-${dd}_${hh}${mm}_${safeName}.zip`;
 
-      // ✅ <a download> 방식으로 다운로드 트리거
-      const url = URL.createObjectURL(zipBlob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = "completed_forms.zip";
-      document.body.appendChild(link); // (안전성 보장용)
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
-
-      console.log("✅ ZIP 파일 다운로드 완료!");
-    } catch (error) {
-      console.error("❌ ZIP 생성 중 오류 발생:", error);
-      alert("🚨 ZIP 파일을 생성하는 도중 오류가 발생했습니다.");
+            await Filesystem.writeFile({
+              path: fileName, // ✅ 동적으로 생성된 파일명 사용
+              data: base64,
+              directory: dir,
+            });
+            alert(`✅ Consent Form Saved: ${fileName} (${dir})`);
+            console.log(`✅ 저장 성공: ${dir}`);
+            saved = true;
+            break;
+          } catch (err) {
+            console.warn(`⚠️ 저장 실패 in ${dir}:`, err);
+            lastError = err;
+          }
+        }
+  
+        if (!saved) {
+          throw lastError ?? new Error("No directory succeeded");
+        }
+      }
+    } catch (error: unknown) {
+      let msg = "Unknown error";
+    
+      if (typeof error === "string") {
+        msg = error;
+      } else if (error instanceof Error) {
+        msg = error.message;
+      } else if (typeof error === "object" && error !== null) {
+        msg = JSON.stringify(error);
+      }
+    
+      alert(`❌ Failed to Save Consent Form: ${msg}`);
+      alert("📂 Failed to Save zip file. Please check your auth or file storage.");
     }
-
+    
+  
     setIsSubmitButtonLoading(false);
   };
-
-  // const handleSubmitAll = async () => {
-  //   setIsSubmitButtonLoading(true);
-  //   const zip = new JSZip();
-  //   savedForms.forEach(({ key, blob }, index) => {
-  //     zip.file(`${key}_form.pdf`, blob);
-  //   });
-  //   const zipBlob = await zip.generateAsync({ type: "blob" });
-
-  //   const formData = new FormData();
-  //   formData.append("zipFile", new File([zipBlob], "completed_forms.zip")); // Create a File object
-  //   formData.append("clientName", `${userData.firstName}_${userData.lastName}`);
-
-  //   const response = await fetch("/api/send-zip", {
-  //     method: "POST",
-  //     body: formData,
-  //   });
-  //    setIsSubmitButtonLoading(false);
-  //    if (!response.ok) {
-  //     alert("Email Not Sent!");
-  //   }
-  //   saveAs(zipBlob, "completed_forms.zip");
-  // };
 
   const isRowHighlighted = (formKey: string): boolean => {
     const formServiceMap: Record<string, string[]> = {
@@ -218,10 +256,6 @@ const Index: React.FC = () => {
           <br />
           <div className={subtitle({ class: "mt-2" })}>
             All personal health information will remain strictly confidential.
-          </div>
-          <br />
-          <div className={subtitle({ class: "mt-2" })}>
-            Last updated: 2025-04-13 23:27
           </div>
         </div>
       </section>

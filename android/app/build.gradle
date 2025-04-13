@@ -7,8 +7,8 @@ android {
         applicationId "com.kgloe.consentapp"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion 33
-        versionCode 4140128
-        versionName "2025.04.14-012834"
+        versionCode 4140210
+        versionName "2025.04.14-021045"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
