@@ -79,6 +79,7 @@ Or build APK directly using:
 
 ```
 cd android
+./gradlew clean
 ./gradlew assembleDebug
 ```
 
@@ -107,3 +108,29 @@ android/app/build/outputs/apk/debug/app-debug.apk
 # License
 
 MIT License © June Park
+
+
+안드
+```
+# rm -rf node_modules 
+#@capacitor/android를 설치/업그레이드했을 때, 새로 받은 gradle에 VERSION_21이 생길 수 있음
+# npm install 전에 postinstall 스크립트가 제대로 실행되지 않을 때	기존 node_modules에 이미 잘못된 gradle이 남아 있음
+# 빌드 실패 이유가 VERSION_21인데, android 폴더는 잘 수정된 경우	남은 문제는 대부분 node_modules 안쪽에 있음
+
+# 1. 필요한 패키지 설치 (처음 또는 변경된 경우)
+npm install
+
+# 2. 웹 앱 빌드 → out 디렉토리 생성
+npm run build
+
+# 3. 웹 코드 → 안드로이드로 복사
+npx cap sync android
+
+# 4. 빌드 폴더 삭제 (선택)
+rm -rf android/app/build
+
+# 5. APK 빌드
+cd android
+./gradlew clean
+./gradlew assembleDebug
+```

@@ -1,6 +1,7 @@
-
 import React, { useState, useEffect, useRef } from "react";
 import { Input } from "@heroui/react";
+import { useTheme } from "next-themes";
+
 
 interface Option {
   key: string;
@@ -17,19 +18,19 @@ interface SearchableDropdownProps {
 const SearchableDropdown: React.FC<SearchableDropdownProps> = ({
   label,
   options,
-  // selectedValue,
+  selectedValue,
   onChange,
 }) => {
-  const [searchText, setSearchText] = useState("");
+  const [searchText, setSearchText] = useState(selectedValue || "");
   const [isOpen, setIsOpen] = useState(false);
   const [highlightedIndex, setHighlightedIndex] = useState(0);
   const dropdownRef = useRef<HTMLDivElement>(null);
-
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
   const filteredOptions = options.filter((option) =>
-    option.label.toLowerCase().includes(searchText.toLowerCase()),
+    option.label.toLowerCase().includes(searchText.toLowerCase())
   );
 
-  // Close dropdown when clicking outside
   const handleClickOutside = (event: MouseEvent) => {
     if (
       dropdownRef.current &&
@@ -46,31 +47,28 @@ const SearchableDropdown: React.FC<SearchableDropdownProps> = ({
     };
   }, []);
 
-  // Handle dropdown option selection
   const handleSelect = (label: string) => {
     onChange(label);
     setSearchText(label);
     setIsOpen(false);
-    setHighlightedIndex(0); // Reset the highlighted index
+    setHighlightedIndex(0);
   };
 
-  // Handle input changes
   const handleInputChange = (value: string) => {
     setSearchText(value);
     setIsOpen(true);
-    setHighlightedIndex(0); // Reset highlighted index when filtering
+    setHighlightedIndex(0);
   };
 
-  // Handle keyboard navigation
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "ArrowDown") {
       e.preventDefault();
-      setHighlightedIndex((prevIndex) =>
-        Math.min(prevIndex + 1, filteredOptions.length - 1),
+      setHighlightedIndex((prev) =>
+        Math.min(prev + 1, filteredOptions.length - 1)
       );
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
-      setHighlightedIndex((prevIndex) => Math.max(prevIndex - 1, 0));
+      setHighlightedIndex((prev) => Math.max(prev - 1, 0));
     } else if (e.key === "Enter") {
       e.preventDefault();
       if (filteredOptions[highlightedIndex]) {
@@ -82,15 +80,7 @@ const SearchableDropdown: React.FC<SearchableDropdownProps> = ({
   };
 
   return (
-    <div 
-      ref={dropdownRef} 
-      style={{ position: "relative" }}
-      role="combobox"
-      aria-expanded={isOpen}
-      aria-haspopup="listbox"
-      aria-owns="dropdown-options"
-      aria-controls="dropdown-options" // 추가된 속성
-    >
+    <div ref={dropdownRef} style={{ position: "relative" }}>
       <Input
         label={label}
         placeholder="Type to search..."
@@ -98,14 +88,9 @@ const SearchableDropdown: React.FC<SearchableDropdownProps> = ({
         onFocus={() => setIsOpen(true)}
         onChange={(e) => handleInputChange(e.target.value)}
         onKeyDown={handleKeyDown}
-        aria-autocomplete="list"
-        aria-controls="dropdown-options"
       />
       {isOpen && filteredOptions.length > 0 && (
         <div
-          id="dropdown-options"
-          role="listbox"
-          tabIndex={-1} // Make the dropdown focusable
           style={{
             position: "absolute",
             top: "100%",
@@ -113,8 +98,9 @@ const SearchableDropdown: React.FC<SearchableDropdownProps> = ({
             right: 0,
             zIndex: 1000,
             border: "1px solid #ddd",
-            borderRadius: "8px", // Soften border radius
-            backgroundColor: "white",
+            borderRadius: "8px",
+            backgroundColor: isDark ? "#1f2937" : "white",
+            color: isDark ? "#f9fafb" : "#111827",
             maxHeight: "200px",
             overflowY: "auto",
             boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
@@ -124,26 +110,30 @@ const SearchableDropdown: React.FC<SearchableDropdownProps> = ({
             <div
               key={option.key}
               role="option"
-              aria-selected={index === highlightedIndex}
-              tabIndex={0} // Make options focusable
+              tabIndex={0}
+              onMouseEnter={() => setHighlightedIndex(index)}
+              onClick={() => handleSelect(option.label)}
+              onKeyDown={(e) =>
+                e.key === "Enter" && handleSelect(option.label)
+              }
               style={{
                 padding: "8px",
                 cursor: "pointer",
                 backgroundColor:
-                  index === highlightedIndex ? "#f0f0f0" : "white",
+                  index === highlightedIndex
+                    ? isDark
+                      ? "#374151"
+                      : "#f0f0f0"
+                    : isDark
+                    ? "#1f2937"
+                    : "white",
+                color: isDark ? "#f9fafb" : "#111827",
                 borderRadius:
                   index === 0
                     ? "8px 8px 0 0"
                     : index === filteredOptions.length - 1
-                      ? "0 0 8px 8px"
-                      : "0", // Rounded edges for the first and last item
-              }}
-              onMouseEnter={() => setHighlightedIndex(index)} // Highlight item on hover
-              onClick={() => handleSelect(option.label)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  handleSelect(option.label);
-                }
+                    ? "0 0 8px 8px"
+                    : "0",
               }}
             >
               {option.label}

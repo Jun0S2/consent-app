@@ -15,7 +15,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   return (
     <div
       className={clsx(
-        "min-h-screen bg-background font-sans antialiased",
+        "min-h-screen bg-background font-sans antialiased overflow-x-hidden", // ← 추가
         fontSans.variable
       )}
     >
@@ -23,8 +23,8 @@ export default function MyApp({ Component, pageProps }: AppProps) {
         <NextThemesProvider attribute="class" defaultTheme="dark">
           <div className="relative flex flex-col h-screen">
             <Navbar />
-            <main className="container mx-auto max-w-7xl pt-16 px-6 flex-grow">
-              <Component {...pageProps} />
+            <main className="w-full max-w-4xl mx-auto pt-16 px-4 sm:px-6 flex-grow">
+            <Component {...pageProps} />
             </main>
           </div>
         </NextThemesProvider>

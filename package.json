@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint app components utils --ext .ts,.tsx --fix"
+    "lint": "eslint app components utils --ext .ts,.tsx --fix",
+    "postinstall": "node ./scripts/fixJavaVersion.js"
   },
   "dependencies": {
     "@capacitor/android": "^7.2.0",

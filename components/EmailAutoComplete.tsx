@@ -1,14 +1,9 @@
-
+"use client";
 import React, { useState, useRef, useEffect } from "react";
 import { Input } from "@heroui/react";
+import { useTheme } from "next-themes";
 
-const emailDomains = [
-  "gmail.com",
-  "yahoo.com",
-  "outlook.com",
-  "icloud.com",
-  "hotmail.com",
-];
+const emailDomains = ["gmail.com", "yahoo.com", "outlook.com", "icloud.com", "hotmail.com"];
 
 interface EmailAutocompleteProps {
   label: string;
@@ -27,12 +22,9 @@ const EmailAutocomplete: React.FC<EmailAutocompleteProps> = ({
   const [isOpen, setIsOpen] = useState(false);
   const [highlightedIndex, setHighlightedIndex] = useState(0);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  // 키보드 이벤트 핸들러 추가 (접근성 위반 수정)
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === 'Enter' && suggestions[highlightedIndex]) {
-      handleSelect(suggestions[highlightedIndex]);
-    }
-  };
+
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value;
@@ -74,24 +66,16 @@ const EmailAutocomplete: React.FC<EmailAutocompleteProps> = ({
   }, []);
 
   return (
-    <div
-      ref={dropdownRef}
-      style={{ position: "relative", marginBottom: "1rem" }}
-    >
+    <div ref={dropdownRef} style={{ position: "relative", marginBottom: "1rem" }}>
       <Input
         label={label}
         placeholder="Enter your email"
         value={value}
         onChange={handleInputChange}
         errorMessage={validationError ? "Invalid email" : undefined}
-        // status={validationError ? "error" : "default"} // Display error styling if validation fails
-        // helperText={validationError} // Show error message
       />
       {isOpen && suggestions.length > 0 && (
         <div
-          id="email-suggestions"
-          role="listbox"
-          tabIndex={-1}
           style={{
             position: "absolute",
             top: "100%",
@@ -99,35 +83,41 @@ const EmailAutocomplete: React.FC<EmailAutocompleteProps> = ({
             right: 0,
             zIndex: 1000,
             border: "1px solid #ddd",
-            borderRadius: "8px", // Rounded corners for dropdown
-            backgroundColor: "white",
+            borderRadius: "8px",
+            backgroundColor: isDark ? "#1f2937" : "white",
+            color: isDark ? "#f9fafb" : "#111827",
             maxHeight: "200px",
             overflowY: "auto",
             boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
           }}
-          onKeyDown={handleKeyDown} // Handle keyboard events for accessibility
         >
           {suggestions.map((suggestion, index) => (
             <div
               key={index}
               role="option"
-              aria-selected={index === highlightedIndex}
-              tabIndex={0} // Make suggestions focusable
+              tabIndex={0}
+              onMouseEnter={() => setHighlightedIndex(index)}
+              onClick={() => handleSelect(suggestion)}
+              onKeyDown={(e) => e.key === "Enter" && handleSelect(suggestion)}
               style={{
                 padding: "8px",
                 cursor: "pointer",
                 backgroundColor:
-                  index === highlightedIndex ? "#f0f0f0" : "white",
+                  index === highlightedIndex
+                    ? isDark
+                      ? "#374151"
+                      : "#f0f0f0"
+                    : isDark
+                    ? "#1f2937"
+                    : "white",
+                color: isDark ? "#f9fafb" : "#111827",
                 borderRadius:
                   index === 0
                     ? "8px 8px 0 0"
                     : index === suggestions.length - 1
-                      ? "0 0 8px 8px"
-                      : "0", // Rounded edges for first and last item
+                    ? "0 0 8px 8px"
+                    : "0",
               }}
-              onMouseEnter={() => setHighlightedIndex(index)}
-              onClick={() => handleSelect(suggestion)}
-              onKeyDown={(e) => e.key === 'Enter' && handleSelect(suggestion)}
             >
               {suggestion}
             </div>
