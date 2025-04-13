@@ -1,53 +1,105 @@
-# Next.js & HeroUI Template
+# 🩺 Consent App – Medical Consent Form Generator
 
-This is a template for creating applications using Next.js 14 (app directory) and HeroUI (v2).
+> A privacy-focused, multi-form consent manager for medical clinics.  
+> Built with React, HeroUI, Tailwind, and Capacitor. Exports user-filled PDFs into a zip file for download.
 
-[Try it on CodeSandbox](https://githubbox.com/heroui-inc/heroui/next-app-template)
+---
 
-## Technologies Used
+## ✨ Features
 
-- [Next.js 14](https://nextjs.org/docs/getting-started)
-- [HeroUI v2](https://heroui.com/)
+- 🔐 Personal information input with live form validation
+- 📋 Dynamic form generation based on selected services
+- ✅ Checkbox tracking + completion status per form
+- 📦 ZIP export of all completed forms (PDFs)
+- 📱 PWA enabled + cross-platform with Capacitor (iOS & Android ready)
+- 📥 Email autocomplete + phone formatter
+- 🎨 Beautiful UI using HeroUI + TailwindCSS
+
+---
+
+## 🛠 Tech Stack
+
+- [React](https://react.dev/)
+- [Next.js (Static Export)](https://nextjs.org/docs/pages/api-reference/next.config.js/output)
+- [Capacitor](https://capacitorjs.com/) (iOS + Android builds)
 - [Tailwind CSS](https://tailwindcss.com/)
-- [Tailwind Variants](https://tailwind-variants.org)
-- [TypeScript](https://www.typescriptlang.org/)
-- [Framer Motion](https://www.framer.com/motion/)
-- [next-themes](https://github.com/pacocoursey/next-themes)
+- [HeroUI](https://heroui.dev/)
+- [JSZip + FileSaver](https://stuk.github.io/jszip/) (for file downloads)
 
-## How to Use
+---
 
-### Use the template with create-next-app
+## 🚀 Getting Started
 
-To create a new project based on this template using `create-next-app`, run the following command:
+### 1. Clone the repository
 
 ```bash
-npx create-next-app -e https://github.com/heroui-inc/next-app-template
+git clone https://github.com/your-username/consent-app.git
+cd consent-app
 ```
 
-### Install dependencies
+### 2. Install dependencies and run
 
-You can use one of them `npm`, `yarn`, `pnpm`, `bun`, Example using `npm`:
-
-```bash
+```
 npm install
 ```
 
-### Run the development server
+---
 
-```bash
-npm run dev
+## 📦 Build for Web
+
+```
+npm run build && npx next export
 ```
 
-### Setup pnpm (optional)
+## 📱 Native Builds (Capacitor)
 
-If you are using `pnpm`, you need to add the following code to your `.npmrc` file:
+### iOS (requires macOS + Xcode)
 
-```bash
-public-hoist-pattern[]=*@heroui/*
+> Build and run the project using Xcode.
+
+```
+npx cap add ios
+npx cap copy ios
+npx cap open ios
 ```
 
-After modifying the `.npmrc` file, you need to run `pnpm install` again to ensure that the dependencies are installed correctly.
+### Android (requires Android Studio or CLI SDK tools)
 
-## License
+```
+npx cap add android
+npx cap copy android
+npx cap open android
+```
 
-Licensed under the [MIT license](https://github.com/heroui-inc/next-app-template/blob/main/LICENSE).
+Or build APK directly using:
+
+```
+cd android
+./gradlew assembleDebug
+```
+
+The APK will be located in:
+
+```
+android/app/build/outputs/apk/debug/app-debug.apk
+```
+
+---
+
+# Project Structure
+
+```
+.
+├── components/          # Input, Form logic, UI primitives
+├── pages/               # Main index page for form app
+├── utils/pdfGenerator.ts  # Custom PDF generator
+├── public/              # Assets and icons
+├── config/              # App-wide constants and settings
+├── capacitor.config.ts  # Capacitor config for native builds
+├── out/                 # Static output for PWA/native
+├── android/, ios/       # Native project folders
+```
+
+# License
+
+MIT License © June Park
