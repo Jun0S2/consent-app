@@ -1,5 +1,9 @@
 # 🩺 Consent App – Medical Consent Form Generator
 
+<p align="center">
+  <img src="https://your-image-url.png" alt="Consent App Banner" width="100%" />
+</p>
+
 > A privacy-focused, multi-form consent manager for medical clinics.  
 > Built with React, HeroUI, Tailwind, and Capacitor. Exports user-filled PDFs into a zip file for download.
 
