@@ -104,6 +104,7 @@ const EmailAutocomplete: React.FC<EmailAutocompleteProps> = ({
             <div
               key={index}
               role="option"
+              aria-selected={index === highlightedIndex}
               tabIndex={0}
               onMouseEnter={() => setHighlightedIndex(index)}
               onClick={() => handleSelect(suggestion)}

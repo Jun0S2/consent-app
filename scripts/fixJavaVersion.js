@@ -1,9 +1,10 @@
+// scripts/fixJavaVersion.js
 const fs = require("fs");
 const path = require("path");
 
 const targetDirs = [
-  path.join(__dirname, "../android"), // 프로젝트의 android 폴더
-  path.join(__dirname, "../node_modules/@capacitor"), // capacitor 모듈 전체
+  path.join(__dirname, "../android"),
+  path.join(__dirname, "../node_modules/@capacitor")
 ];
 
 function walk(dir) {
@@ -21,17 +22,14 @@ function walk(dir) {
   return results;
 }
 
-targetDirs.forEach((targetDir) => {
-  const files = walk(targetDir);
-  files.forEach((filePath) => {
-    let content = fs.readFileSync(filePath, "utf8");
+targetDirs.forEach((dir) => {
+  const files = walk(dir);
+  files.forEach((file) => {
+    const content = fs.readFileSync(file, "utf8");
     if (content.includes("VERSION_21")) {
-      const updated = content.replace(
-        /JavaVersion\.VERSION_21/g,
-        "JavaVersion.VERSION_17",
-      );
-      fs.writeFileSync(filePath, updated);
-      console.log(`✅ Patched: ${filePath}`);
+      const updated = content.replace(/JavaVersion\.VERSION_21/g, "JavaVersion.VERSION_17");
+      fs.writeFileSync(file, updated);
+      console.log(`✅ Patched: ${file}`);
     }
   });
 });

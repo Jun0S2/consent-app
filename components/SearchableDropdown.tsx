@@ -109,6 +109,7 @@ const SearchableDropdown: React.FC<SearchableDropdownProps> = ({
             <div
               key={option.key}
               role="option"
+              aria-selected={index === highlightedIndex}
               tabIndex={0}
               onMouseEnter={() => setHighlightedIndex(index)}
               onClick={() => handleSelect(option.label)}
