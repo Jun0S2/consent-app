@@ -1,4 +1,3 @@
-
 import { Checkbox } from "@heroui/react";
 /**
  * Modal Body Contents for FACIAL FILLER INJECTION

@@ -3,7 +3,13 @@ import React, { useState, useRef, useEffect } from "react";
 import { Input } from "@heroui/react";
 import { useTheme } from "next-themes";
 
-const emailDomains = ["gmail.com", "yahoo.com", "outlook.com", "icloud.com", "hotmail.com"];
+const emailDomains = [
+  "gmail.com",
+  "yahoo.com",
+  "outlook.com",
+  "icloud.com",
+  "hotmail.com",
+];
 
 interface EmailAutocompleteProps {
   label: string;
@@ -66,7 +72,10 @@ const EmailAutocomplete: React.FC<EmailAutocompleteProps> = ({
   }, []);
 
   return (
-    <div ref={dropdownRef} style={{ position: "relative", marginBottom: "1rem" }}>
+    <div
+      ref={dropdownRef}
+      style={{ position: "relative", marginBottom: "1rem" }}
+    >
       <Input
         label={label}
         placeholder="Enter your email"
@@ -108,15 +117,15 @@ const EmailAutocomplete: React.FC<EmailAutocompleteProps> = ({
                       ? "#374151"
                       : "#f0f0f0"
                     : isDark
-                    ? "#1f2937"
-                    : "white",
+                      ? "#1f2937"
+                      : "white",
                 color: isDark ? "#f9fafb" : "#111827",
                 borderRadius:
                   index === 0
                     ? "8px 8px 0 0"
                     : index === suggestions.length - 1
-                    ? "0 0 8px 8px"
-                    : "0",
+                      ? "0 0 8px 8px"
+                      : "0",
               }}
             >
               {suggestion}

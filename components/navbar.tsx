@@ -24,7 +24,7 @@ export const Navbar = () => {
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
         <NavbarBrand as="li" className="gap-3 max-w-fit">
           <NextLink href="https://www.k-gloe.com/">
-          <Image src={logoSrc} width="110px" />
+            <Image src={logoSrc} width="110px" />
           </NextLink>
         </NavbarBrand>
       </NavbarContent>

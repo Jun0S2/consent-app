@@ -10,18 +10,18 @@ import FileSaver from "file-saver";
 import EmailAutocomplete from "./EmailAutoComplete";
 import SearchableDropdown from "./SearchableDropdown";
 import {
-  Card, 
-  Input, 
-  Checkbox, 
-  Table, 
-  TableHeader, 
+  Card,
+  Input,
+  Checkbox,
+  Table,
+  TableHeader,
   TableColumn,
-  TableBody, 
-  TableRow, 
-  TableCell, 
+  TableBody,
+  TableRow,
+  TableCell,
   Button,
-  Chip, 
-  Divider, 
+  Chip,
+  Divider,
 } from "@heroui/react";
 
 const Index: React.FC = () => {
@@ -86,25 +86,25 @@ const Index: React.FC = () => {
   };
   const handleSubmitAll = async () => {
     setIsSubmitButtonLoading(true);
-  
+
     if (savedForms.length === 0) {
       alert("🚨 다운로드할 폼이 없습니다. 먼저 폼을 작성해주세요.");
       setIsSubmitButtonLoading(false);
       return;
     }
-  
+
     try {
       const zip = new JSZip();
       savedForms.forEach(({ key, blob }) => {
         zip.file(`${key}_form.pdf`, blob);
       });
-  
+
       console.log("✅ ZIP 파일을 생성 중...");
-  
+
       const zipBlob = await zip.generateAsync({ type: "blob" });
-  
+
       console.log("✅ ZIP 파일 생성 완료!");
-  
+
       // ✅ <a download> 방식으로 다운로드 트리거
       const url = URL.createObjectURL(zipBlob);
       const link = document.createElement("a");
@@ -114,16 +114,15 @@ const Index: React.FC = () => {
       link.click();
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
-  
+
       console.log("✅ ZIP 파일 다운로드 완료!");
     } catch (error) {
       console.error("❌ ZIP 생성 중 오류 발생:", error);
       alert("🚨 ZIP 파일을 생성하는 도중 오류가 발생했습니다.");
     }
-  
+
     setIsSubmitButtonLoading(false);
   };
-  
 
   // const handleSubmitAll = async () => {
   //   setIsSubmitButtonLoading(true);
@@ -213,22 +212,22 @@ const Index: React.FC = () => {
     <div>
       {/* Title */}
       <section className="flex flex-col items-center justify-center gap-4 py-5">
-       <div className="inline-block text-center justify-center">
-        <span className={title({ color: "pink" })}>K-GLOE&nbsp;</span>
-        <span className={title()}>Medical Consent Forms&nbsp;</span>
-        <br />
-        <div className={subtitle({ class: "mt-2" })}>
-          All personal health information will remain strictly confidential.
+        <div className="inline-block text-center justify-center">
+          <span className={title({ color: "pink" })}>K-GLOE&nbsp;</span>
+          <span className={title()}>Medical Consent Forms&nbsp;</span>
+          <br />
+          <div className={subtitle({ class: "mt-2" })}>
+            All personal health information will remain strictly confidential.
+          </div>
+          <br />
+          <div className={subtitle({ class: "mt-2" })}>
+            Last updated: 2025-04-13 23:27
+          </div>
         </div>
-        <br />
-        <div className={subtitle({ class: "mt-2" })}>
-        Last updated: 2025-04-13 23:27
-        </div>
-      </div>
       </section>
-  
+
       <Card className="w-full max-w-[95vw] sm:max-w-2xl px-4 py-6 sm:p-10 mx-auto">
-      {/* <Card className="p-10 max-w-4xl mx-auto"> */}
+        {/* <Card className="p-10 max-w-4xl mx-auto"> */}
         <h2 className="text-2xl font-semibold pt-2">Personal Information</h2>
         <h1 className="text-md mb-7 ">Please Provide the Following Details</h1>
 
@@ -251,8 +250,8 @@ const Index: React.FC = () => {
           />
           {/* Additional inputs for address, state, etc. */}
           {/* <div className="grid grid-cols-2 gap-4"> */}
-{/* 반응형으로 수정 */}
-<div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
+          {/* 반응형으로 수정 */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
             <Input
               size="sm"
               label="Address*"
@@ -355,7 +354,7 @@ const Index: React.FC = () => {
           </div>
           <h2 className="text-2xl font-semibold pt-4">Form Status</h2>
           <p>Please fill out the highlighted forms</p>
-          
+
           <Table
             aria-label="Consent Forms Table"
             selectionMode="multiple"

@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from "react";
 import { Input } from "@heroui/react";
 import { useTheme } from "next-themes";
 
-
 interface Option {
   key: string;
   label: string;
@@ -28,7 +27,7 @@ const SearchableDropdown: React.FC<SearchableDropdownProps> = ({
   const { theme } = useTheme();
   const isDark = theme === "dark";
   const filteredOptions = options.filter((option) =>
-    option.label.toLowerCase().includes(searchText.toLowerCase())
+    option.label.toLowerCase().includes(searchText.toLowerCase()),
   );
 
   const handleClickOutside = (event: MouseEvent) => {
@@ -64,7 +63,7 @@ const SearchableDropdown: React.FC<SearchableDropdownProps> = ({
     if (e.key === "ArrowDown") {
       e.preventDefault();
       setHighlightedIndex((prev) =>
-        Math.min(prev + 1, filteredOptions.length - 1)
+        Math.min(prev + 1, filteredOptions.length - 1),
       );
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
@@ -113,9 +112,7 @@ const SearchableDropdown: React.FC<SearchableDropdownProps> = ({
               tabIndex={0}
               onMouseEnter={() => setHighlightedIndex(index)}
               onClick={() => handleSelect(option.label)}
-              onKeyDown={(e) =>
-                e.key === "Enter" && handleSelect(option.label)
-              }
+              onKeyDown={(e) => e.key === "Enter" && handleSelect(option.label)}
               style={{
                 padding: "8px",
                 cursor: "pointer",
@@ -125,15 +122,15 @@ const SearchableDropdown: React.FC<SearchableDropdownProps> = ({
                       ? "#374151"
                       : "#f0f0f0"
                     : isDark
-                    ? "#1f2937"
-                    : "white",
+                      ? "#1f2937"
+                      : "white",
                 color: isDark ? "#f9fafb" : "#111827",
                 borderRadius:
                   index === 0
                     ? "8px 8px 0 0"
                     : index === filteredOptions.length - 1
-                    ? "0 0 8px 8px"
-                    : "0",
+                      ? "0 0 8px 8px"
+                      : "0",
               }}
             >
               {option.label}

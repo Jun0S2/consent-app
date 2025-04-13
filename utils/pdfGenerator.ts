@@ -8,7 +8,7 @@ export const generatePDF = ({
   clientName,
   performedBy,
   signatureData,
-  currentDate
+  currentDate,
 }: {
   headerTitle: string;
   subTitle?: string;

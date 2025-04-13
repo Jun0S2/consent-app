@@ -109,10 +109,10 @@ android/app/build/outputs/apk/debug/app-debug.apk
 
 MIT License © June Park
 
-
 안드
+
 ```
-# rm -rf node_modules 
+# rm -rf node_modules
 #@capacitor/android를 설치/업그레이드했을 때, 새로 받은 gradle에 VERSION_21이 생길 수 있음
 # npm install 전에 postinstall 스크립트가 제대로 실행되지 않을 때	기존 node_modules에 이미 잘못된 gradle이 남아 있음
 # 빌드 실패 이유가 VERSION_21인데, android 폴더는 잘 수정된 경우	남은 문제는 대부분 node_modules 안쪽에 있음

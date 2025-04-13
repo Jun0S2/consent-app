@@ -16,7 +16,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
     <div
       className={clsx(
         "min-h-screen bg-background font-sans antialiased overflow-x-hidden", // ← 추가
-        fontSans.variable
+        fontSans.variable,
       )}
     >
       <HeroUIProvider>
@@ -24,7 +24,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
           <div className="relative flex flex-col h-screen">
             <Navbar />
             <main className="w-full max-w-4xl mx-auto pt-16 px-4 sm:px-6 flex-grow">
-            <Component {...pageProps} />
+              <Component {...pageProps} />
             </main>
           </div>
         </NextThemesProvider>

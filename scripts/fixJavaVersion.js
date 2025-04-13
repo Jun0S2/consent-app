@@ -2,8 +2,8 @@ const fs = require("fs");
 const path = require("path");
 
 const targetDirs = [
-  path.join(__dirname, "../android"),                          // 프로젝트의 android 폴더
-  path.join(__dirname, "../node_modules/@capacitor")           // capacitor 모듈 전체
+  path.join(__dirname, "../android"), // 프로젝트의 android 폴더
+  path.join(__dirname, "../node_modules/@capacitor"), // capacitor 모듈 전체
 ];
 
 function walk(dir) {
@@ -26,7 +26,10 @@ targetDirs.forEach((targetDir) => {
   files.forEach((filePath) => {
     let content = fs.readFileSync(filePath, "utf8");
     if (content.includes("VERSION_21")) {
-      const updated = content.replace(/JavaVersion\.VERSION_21/g, "JavaVersion.VERSION_17");
+      const updated = content.replace(
+        /JavaVersion\.VERSION_21/g,
+        "JavaVersion.VERSION_17",
+      );
       fs.writeFileSync(filePath, updated);
       console.log(`✅ Patched: ${filePath}`);
     }
